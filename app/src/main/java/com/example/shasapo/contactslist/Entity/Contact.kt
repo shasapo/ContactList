@@ -7,12 +7,12 @@ import android.arch.persistence.room.PrimaryKey
 @Entity(tableName = "Contact")
 data class Contact(
         @PrimaryKey(autoGenerate = true)
-        var id: Int = 0,
+        var cId: Int = 0,
 
-        @ColumnInfo(name = "firstName")
+        @ColumnInfo(name = "first_name")
         var firstName: String? = null,
 
-        @ColumnInfo(name = "lastName")
+        @ColumnInfo(name = "last_name")
         var lastName: String? = null,
 
         @ColumnInfo(name = "email")

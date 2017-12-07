@@ -61,37 +61,6 @@ class ContactDaoTest {
 
 
     @Test
-    fun testInsertAllContact() {
-
-        assertEquals(0, dao.countContact())
-
-        val contacts = listOf(
-            Contact(firstName = "shasa",lastName = "po",email = "shasapo@gmail.com"),
-            Contact(firstName = "dino",lastName = "po",email = "shasapo@gmail.com"),
-            Contact(firstName = "ayu",lastName = "po",email = "shasapo@gmail.com")
-        )
-
-        dao.insertAllContact(contacts)
-        
-        //assertEquals(3, dao.countContact())
-    }
-
-    @Test
-    fun testConflictingInsertsReplaceUsers() {
-        val contacts = listOf(
-                Contact(firstName = "shasa",lastName = "po",email = "shasapo@gmail.com"),
-                Contact(firstName = "dino",lastName = "po",email = "shasapo@gmail.com"),
-                Contact(firstName = "ayu",lastName = "po",email = "shasapo@gmail.com")
-        )
-
-        dao.insertAllContact(contacts)
-
-        assertEquals(contacts, dao.getAllContact())
-    }
-
-
-
-    @Test
     fun testUpdateContact() {
         // When inserting a new user in the data source
         dao.insertContact(contact1)
@@ -127,53 +96,9 @@ class ContactDaoTest {
     }
 
 
-
     @Test fun getUsersWhenNoUserInserted() {
         val user = dao.getContactByFirstName("shasa")
 
 
     }
-//
-//    @Test fun insertAndGetUser() {
-//        // When inserting a new user in the data source
-//        database.userDao().insertUser(USER)
-//
-//        // When subscribing to the emissions of the user
-//        database.userDao().getUserById(USER.id)
-//                .test()
-//                // assertValue asserts that there was only one emission of the user
-//                .assertValue { it.id == USER.id && it.userName == USER.userName }
-//    }
-//
-//    @Test fun updateAndGetUser() {
-//        // Given that we have a user in the data source
-//        database.userDao().insertUser(USER)
-//
-//        // When we are updating the name of the user
-//        val updatedUser = User(USER.id, "new username")
-//        database.userDao().insertUser(updatedUser)
-//
-//        // When subscribing to the emissions of the user
-//        database.userDao().getUserById(USER.id)
-//                .test()
-//                // assertValue asserts that there was only one emission of the user
-//                .assertValue { it.id == USER.id && it.userName == "new username" }
-//    }
-//
-//    @Test fun deleteAndGetUser() {
-//        // Given that we have a user in the data source
-//        database.userDao().insertUser(USER)
-//
-//        //When we are deleting all users
-//        database.userDao().deleteAllUsers()
-//        // When subscribing to the emissions of the user
-//        database.userDao().getUserById(USER.id)
-//                .test()
-//                // check that there's no user emitted
-//                .assertNoValues()
-//    }
-//
-//    companion object {
-//        private val USER = User("id", "username")
-//    }
 }

@@ -13,27 +13,18 @@ interface ContactDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertContact(contact: Contact)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllContact(contactList: List<Contact>)
-
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateContact(contact: Contact)
 
     @Delete
     fun deleteContact(contact: Contact)
 
-    @Query("SELECT * FROM Contact")
+    @Query("SELECT * FROM CONTACT")
     fun getAllContact(): List<Contact>
 
-    @Query("SELECT * FROM Contact WHERE firstName= :name")
+    @Query("SELECT * FROM CONTACT WHERE first_name like :name")
     fun getContactByFirstName(name: String) : Contact
 
-    @Query("SELECT Count (*) FROM Contact")
+    @Query("SELECT COUNT(*) FROM CONTACT")
     fun countContact(): Int
-
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(vararg user: Contact): LongArray
-
-
 }

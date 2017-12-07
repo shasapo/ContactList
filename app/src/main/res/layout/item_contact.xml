@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/contactContainer">
 
     <LinearLayout
         android:layout_marginTop="10dp"
@@ -11,37 +12,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="center">
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:src="@drawable/ic_account_circle_black_24dp"/>
 
         <LinearLayout
+            android:layout_marginRight="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_gravity="center_vertical"
             android:layout_weight="1">
 
             <TextView
                 android:id="@+id/tvNama"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sarah Melisa Polak"
+                tools:text="Sarah Melisa Polak"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:maxLines="1"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginBottom="5dp"/>
 
             <TextView
                 android:id="@+id/tvEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="shasapo@gmail.com"
-                android:textSize="20sp"/>
+                tools:text="shasapo@gmail.com"
+                android:textSize="15sp"/>
 
         </LinearLayout>
 
@@ -49,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_gravity="center_vertical">
+            android:layout_marginRight="10dp">
 
             <ImageView
                 android:id="@+id/btnEdit"
@@ -69,7 +70,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="1dp"
         android:background="@color/colorPrimaryDark"/>
 
 </LinearLayout>

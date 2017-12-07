@@ -1,25 +1,36 @@
 package com.example.shasapo.contactslist.Adapter
 
+import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import com.example.shasapo.contactslist.Activity.InsertUpdateContactActivity
 import com.example.shasapo.contactslist.Entity.Contact
 import com.example.shasapo.contactslist.R
 import kotlinx.android.synthetic.main.item_contact.view.*
-import java.util.*
-import java.util.zip.Inflater
 
 
-class ContactsAdapter: RecyclerView.Adapter<ContactViewHolder>() {
+class ContactsAdapter(val activity: Activity): RecyclerView.Adapter<ContactViewHolder>() {
 
     var listOfContacts = emptyList<Contact>()
 
-    override fun onBindViewHolder(holder: ContactViewHolder?, position: Int) {
-        holder?.bind(listOfContacts[position])
+    override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
+        val contact = listOfContacts[position]
+        holder.itemView.tvNama.text = """${contact.firstName} ${contact.lastName}"""
+        holder.itemView.tvEmail.text = contact.email
+
+
+        holder.itemView.btnEdit.setOnClickListener{
+            activity.startActivity(Intent(activity,InsertUpdateContactActivity::class.java).putExtra("id",contact.cId))
+        }
+
+
+        holder.itemView.btnDelete.setOnClickListener { view ->
+            Toast.makeText(activity,"Success deleted contact", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun getItemCount(): Int = listOfContacts.size
@@ -31,13 +42,4 @@ class ContactsAdapter: RecyclerView.Adapter<ContactViewHolder>() {
 
 }
 
-class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    fun bind(contact : Contact){
-        itemView.tvNama.text = """${contact.firstName} ${contact.lastName}"""
-        itemView.tvEmail.text = contact.email
-        val rnd = Random()
-        val color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
-        itemView.image.setBackgroundColor(color)
-    }
-}
+class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
