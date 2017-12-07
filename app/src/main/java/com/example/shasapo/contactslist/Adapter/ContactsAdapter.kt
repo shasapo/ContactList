@@ -1,19 +1,20 @@
 package com.example.shasapo.contactslist.Adapter
 
-import android.app.Activity
-import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import com.example.shasapo.contactslist.Activity.InsertUpdateContactActivity
 import com.example.shasapo.contactslist.Entity.Contact
 import com.example.shasapo.contactslist.R
 import kotlinx.android.synthetic.main.item_contact.view.*
 
 
-class ContactsAdapter(val activity: Activity): RecyclerView.Adapter<ContactViewHolder>() {
+interface DaoAction {
+    fun onDelete(contact: Contact)
+    fun onEdit(idContact: Int)
+}
+
+class ContactsAdapter(private val daoAction: DaoAction): RecyclerView.Adapter<ContactViewHolder>() {
 
     var listOfContacts = emptyList<Contact>()
 
@@ -24,12 +25,11 @@ class ContactsAdapter(val activity: Activity): RecyclerView.Adapter<ContactViewH
 
 
         holder.itemView.btnEdit.setOnClickListener{
-            activity.startActivity(Intent(activity,InsertUpdateContactActivity::class.java).putExtra("id",contact.cId))
+            daoAction.onEdit(contact.cId)
         }
 
-
-        holder.itemView.btnDelete.setOnClickListener { view ->
-            Toast.makeText(activity,"Success deleted contact", Toast.LENGTH_SHORT).show()
+        holder.itemView.btnDelete.setOnClickListener {
+            daoAction.onDelete(contact)
         }
     }
 

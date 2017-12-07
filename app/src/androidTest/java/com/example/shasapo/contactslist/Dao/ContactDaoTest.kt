@@ -95,10 +95,24 @@ class ContactDaoTest {
         assertEquals(0, dao.countContact())
     }
 
+    @Test
+    fun testInsertAll(){
+        // When inserting a new user in the data source
+        val listC = populateData()
+        assertEquals(0, dao.countContact())
 
-    @Test fun getUsersWhenNoUserInserted() {
-        val user = dao.getContactByFirstName("shasa")
+        dao.insertAll(listC)
 
+        assertEquals(3, dao.countContact())
 
     }
+
+    fun populateData() : List<Contact> {
+        return mutableListOf(
+                Contact(firstName = "Arif", lastName = "R. Hakim", email = "arif@bbmtek.com"),
+                Contact(firstName = "Dino", lastName = "Dwiyaksa", email = "dino@bbmtek.com"),
+                Contact(firstName = "Ayu", lastName = "Nindya", email = "ayu@bbmtek.com")
+        )
+    }
+
 }

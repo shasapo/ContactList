@@ -8,34 +8,55 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.Toast
 import com.example.shasapo.contactslist.Adapter.ContactsAdapter
+import com.example.shasapo.contactslist.Adapter.DaoAction
+import com.example.shasapo.contactslist.Database.MyDatabase
 import com.example.shasapo.contactslist.Entity.Contact
 import com.example.shasapo.contactslist.R
 import com.facebook.stetho.Stetho
-import io.reactivex.Observable
+import io.reactivex.Completable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), DaoAction {
+    override fun onDelete(contact: Contact) {
+
+        Completable.fromAction{db.contactDao().deleteContact(contact)}
+            .andThen(Single.fromCallable { db.contactDao().getAllContact() })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                (rvContactList.adapter as ContactsAdapter).listOfContacts = it.toMutableList()
+                rvContactList.adapter.notifyDataSetChanged()
+                Toast.makeText(this,"Success deleted contact", Toast.LENGTH_SHORT).show()
+            },{
+                Toast.makeText(this,"Failed deleted contact", Toast.LENGTH_SHORT).show()
+                Log.e("sasa", "err delete $it")
+            })
+    }
+
+    override fun onEdit(idContact: Int) {
+        startActivity(Intent(this,InsertUpdateContactActivity::class.java).putExtra("id",idContact))
+    }
 
     private lateinit var contactsAdapter: ContactsAdapter
     private var contactListt = mutableListOf<Contact>()
+    private lateinit var db : MyDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         Stetho.initializeWithDefaults(this)
 
-        contactsAdapter = ContactsAdapter(this)
-        contactsAdapter.listOfContacts = contactListt
+        db = MyDatabase.getDatabase(this)
 
+
+        contactsAdapter = ContactsAdapter( this)
         rvContactList.layoutManager = LinearLayoutManager(this)
         rvContactList.adapter = contactsAdapter
-        rvContactList.adapter.notifyDataSetChanged()
-
 
 
         fabAddContact.setOnClickListener {
@@ -43,6 +64,19 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Single.fromCallable { db.contactDao().getAllContact() }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    contactsAdapter.listOfContacts = it.toMutableList()
+                    rvContactList.adapter.notifyDataSetChanged()
+                },{
+                    Log.e("sasa","err getalldata $it`")
+                })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -68,43 +102,20 @@ class MainActivity : AppCompatActivity() {
                 Contact(firstName = "Dino", lastName = "Dwiyaksa", email = "dino@bbmtek.com"),
                 Contact(firstName = "Ayu", lastName = "Nindya", email = "ayu@bbmtek.com")
         )
-
-//        val contactList = ArrayList<Contact>()
-//        for (i in 1..3) {
-//            val user = Contact(
-//                    firstName = getRandomString(randBetween(3,7)),
-//                    lastName = getRandomString(randBetween(4,8)),
-//                    email = getRandomString(randBetween(5,10)) + "@bbmtek.com"
-//            )
-//            contactList.add(user)
-//        }
-
-        Observable.just(contactList)
-            .flatMapIterable { it }
+        Single.just(contactList)
+            .flatMap {
+                db.contactDao().insertAll(it)
+                Single.just(db.contactDao().getAllContact())
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                contactListt.add(it)
+                (rvContactList.adapter as ContactsAdapter).listOfContacts = it.toMutableList()
                 rvContactList.adapter.notifyDataSetChanged()
-                Log.e("sasa", "sukses add ${it.firstName}")
-                //db?.contactDao()?.insertContact(it)
             }, {
-                Log.e("sasa", "Error add all: $it" )
+                Toast.makeText(this,"Error add dummy", Toast.LENGTH_SHORT).show()
+                Log.e("sasa","err = $it")
             })
-    }
-
-
-    fun randBetween(start: Int, end: Int): Int {
-        return start + Math.round(Math.random() * (end - start)).toInt()
-    }
-
-    fun getRandomString(sizeOfRandomString: Int): String {
-        val ALLOWED_CHARACTERS = "qwertyuiopasdfghjklzxcvbnm"
-        val random = Random()
-        val sb = StringBuilder(sizeOfRandomString)
-        for (i in 0 until sizeOfRandomString)
-            sb.append(ALLOWED_CHARACTERS.get(random.nextInt(ALLOWED_CHARACTERS.length)))
-        return sb.toString()
     }
 }
 
