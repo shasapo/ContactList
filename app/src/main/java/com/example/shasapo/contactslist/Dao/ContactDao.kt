@@ -3,35 +3,46 @@ package com.example.shasapo.contactslist.Dao
 import android.arch.persistence.room.*
 import com.example.shasapo.contactslist.Entity.Contact
 import android.arch.persistence.room.OnConflictStrategy
+import android.support.annotation.VisibleForTesting
 import io.reactivex.Single
 
 
 @Dao
-interface ContactDao {
+abstract class ContactDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertContact(contact: Contact)
+    abstract fun insertContact(contact: Contact): Long
 
     @Insert
-    fun insertAll(contacts: List<Contact>)
+    abstract fun insertAll(contacts: List<Contact>)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateContact(contact: Contact)
+    abstract fun updateContact(contact: Contact)
 
     @Delete
-    fun deleteContact(contact: Contact)
+    abstract fun deleteContact(contact: Contact)
 
     @Query("SELECT * FROM CONTACT")
-    fun getAllContact(): List<Contact>
+    abstract fun getAllContact(): List<Contact>
 
     @Query("SELECT * FROM CONTACT WHERE first_name like :name")
-    fun getContactByFirstName(name: String) : Contact
+    abstract fun getContactByFirstName(name: String) : Contact
 
 
     @Query("SELECT * FROM CONTACT WHERE cid like :id")
-    fun getContactById(id: Int) : Single<Contact>
+    abstract fun getContactById(id: Int) : Single<Contact>
 
     @Query("SELECT COUNT(*) FROM CONTACT")
-    fun countContact(): Int
+    abstract fun countContact(): Int
+
+    @Transaction
+    @VisibleForTesting
+    open fun somethin(contact: Contact): Long {
+
+        val id = insertContact(contact)
+
+        return id
+
+    }
 
 }

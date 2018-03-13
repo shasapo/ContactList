@@ -107,6 +107,13 @@ class ContactDaoTest {
 
     }
 
+    @Test
+    fun testTrans(){
+        val id = dao.somethin(contact1)
+
+        assertEquals(2, id)
+    }
+
     fun populateData() : List<Contact> {
         return mutableListOf(
                 Contact(firstName = "Arif", lastName = "R. Hakim", email = "arif@bbmtek.com"),
