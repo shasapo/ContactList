@@ -8,9 +8,10 @@ import android.arch.persistence.room.migration.Migration
 import android.content.Context
 import com.example.shasapo.contactslist.Dao.ContactDao
 import com.example.shasapo.contactslist.Entity.Contact
+import com.example.shasapo.contactslist.Entity.ContactRegid
 
 
-@Database(entities = arrayOf(Contact::class), version = 2)
+@Database(entities = arrayOf(Contact::class, ContactRegid::class), version = 2)
 abstract class MyDatabase: RoomDatabase() {
 
     abstract fun contactDao() : ContactDao

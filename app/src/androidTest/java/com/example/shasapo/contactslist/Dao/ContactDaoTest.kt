@@ -111,7 +111,17 @@ class ContactDaoTest {
     fun testTrans(){
         val id = dao.somethin(contact1)
 
+
         assertEquals(2, id)
+        assertEquals(1, dao.getAllContact().size)
+        assertEquals(1, dao.getAllContactRegId().size)
+
+
+        dao.deleteContact(contact1)
+
+        assertEquals(0, dao.getAllContact().size)
+        assertEquals(0, dao.getAllContactRegId().size)
+
     }
 
     fun populateData() : List<Contact> {
